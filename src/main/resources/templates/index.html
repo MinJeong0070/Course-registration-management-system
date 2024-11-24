@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <link rel="stylesheet" th:href="@{https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/stylesheet.css}">
+</head>
+<body data-page="enrollment">
+<div id="pra">
+<!--    <header class="header" th:fragment="header">-->
+    <header class="header">
+        <div class="header-container">
+            <div class="header-logo">
+                <span class="logo-text">동의대학교 수강신청 시스템</span>
+            </div>
+
+            <div class="header-nav">
+                <span>20203019</span>
+                <span>|</span>
+                <span>ICT융합공과대학</span>
+                <span>|</span>
+                <span>컴퓨터공학과</span>
+                <span>|</span>
+                <span>3학년</span>
+                <span>|</span>
+                <a href="#">로그아웃</a>
+            </div>
+        </div>
+    </header>
+
+    <nav class="navbar navbar-expand-custom navbar-mainbg">
+        <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+                class="navbar-toggler" type="button">
+            <i class="fas fa-bars text-white"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav">
+                <div class="hori-selector">
+                    <div class="left"></div>
+                    <div class="right"></div>
+                </div>
+
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/}" data-page="enrollment">수강신청</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0);" data-page="confirmation">수강확정/대기내역</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/CourseCart}" data-page="courseCart">장바구니</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0);" data-page="cartStatus">장바구니 현황</a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+
+    <div id="content-area" class="p-4">
+        <div class="flex">
+            <form th:action="@{/searchCourses}" method="get" class="flex w-full" accept-charset="UTF-8">
+                <input type="hidden" name="returnPage" th:value="'index'"/>
+                <select name="type" class="border border-gray-300 rounded-md p-2">
+                    <option value="">유형</option>
+                    <option value="전체">전체</option>
+                    <option value="장바구니">장바구니</option>
+                </select>
+                <select name="departmentName" class="border border-gray-300 rounded-md p-2">
+                    <option value="">개설학과</option>
+                    <option value="컴퓨터공학과">컴퓨터공학과</option>
+                </select>
+                <select name="grade" class="border border-gray-300 rounded-md p-2">
+                    <option value="">학년</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                </select>
+                <input name="search" class="border border-gray-300 rounded-md p-2 w-1/3" placeholder="과목번호, 담당 교수" type="text">
+                <button type="submit" class="px-4 py-2 rounded">검색</button>
+            </form>
+        </div>
+
+        <!-- 결과 메시지 표시 영역 -->
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+        <table class="w-full border-collapse border">
+            <thead>
+            <tr>
+                <th class="px-2 py-1 text-center">개설학과</th>
+                <th class="px-2 py-1 text-center">교과목번호</th>
+                <th class="px-2 py-1 text-center">교과목명</th>
+                <th class="px-2 py-1 text-center">학점</th>
+                <th class="px-2 py-1 text-center">수강학년</th>
+                <th class="px-2 py-1 text-center">강의실</th>
+                <th class="px-2 py-1 text-center">강의시간</th>
+                <th class="px-2 py-1 text-center">담당교수</th>
+                <th class="px-2 py-1 text-center">제한인원</th>
+                <th class="px-2 py-1 text-center">신청</th>
+                <th class="px-2 py-1 text-center">비고</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(courses)}">
+                <td colspan="11" class="text-center">검색된 강좌가 없습니다.</td>
+            </tr>
+            <tr th:each="courses : ${courses}">
+                <td th:text="${courses.departmentName}"></td>
+                <td th:text="${courses.subjectId}"></td>
+                <td th:text="${courses.subjectName}"></td>
+                <td th:text="${courses.credits}"></td>
+                <td th:text="${courses.grade}"></td>
+                <td th:text="${courses.classroom}"></td>
+                <td th:text="${courses.lectureTime}"></td>
+                <td th:text="${courses.professorName}"></td>
+                <td th:text="${courses.enrollmentCapacity}"></td>
+                <td class="border text-center">
+                    <button class="px-2 py-1 rounded">신청</button>
+                </td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <footer>
+        <button>1</button>
+    </footer>
+</div>
+</body>
+<script th:src="@{https://code.jquery.com/jquery-3.4.1.min.js}"></script>
+<script th:src="@{https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js}"></script>
+<script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/navbar_animation.js}"></script>
+</html>
