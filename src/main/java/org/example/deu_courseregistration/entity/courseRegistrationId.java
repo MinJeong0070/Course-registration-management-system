@@ -9,7 +9,7 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class courseCartId implements java.io.Serializable { // 장바구니의 복합 기본키 설정
+public class courseRegistrationId implements java.io.Serializable{ // 수강신청 복합 기본키 설정
     @Column(name = "학번", length = 9)
     private String studentId;
 
@@ -20,8 +20,8 @@ public class courseCartId implements java.io.Serializable { // 장바구니의 �
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        courseCartId cartId = (courseCartId) o;
-        return studentId.equals(cartId.studentId) && courseId.equals(cartId.courseId);
+        courseRegistrationId registrationId = (courseRegistrationId) o;
+        return studentId.equals(registrationId.studentId) && courseId.equals(registrationId.courseId);
     }
 
     @Override

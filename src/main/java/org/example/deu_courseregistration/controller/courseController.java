@@ -1,8 +1,8 @@
 package org.example.deu_courseregistration.controller;
 
 import org.example.deu_courseregistration.dto.courseDto;
-import org.example.deu_courseregistration.entity.Course;
 import org.example.deu_courseregistration.service.CourseCartService;
+import org.example.deu_courseregistration.service.CourseRegistrationService;
 import org.example.deu_courseregistration.service.CourseSearchService;
 import org.example.deu_courseregistration.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Controller
@@ -21,12 +20,14 @@ public class courseController {
     private final CourseService courseService;
     private final CourseCartService courseCartService;
     private final CourseSearchService courseSearchService;
+    private final CourseRegistrationService courseRegistrationService;
 
     @Autowired
-    public courseController(CourseService courseService, CourseCartService courseCartService, CourseSearchService courseSearchService) {
+    public courseController(CourseService courseService, CourseCartService courseCartService, CourseSearchService courseSearchService, CourseRegistrationService courseRegistrationService) {
         this.courseService = courseService;
         this.courseCartService = courseCartService;
         this.courseSearchService = courseSearchService;
+        this.courseRegistrationService = courseRegistrationService;
     }
 
     // 공통 강좌 데이터 처리 메서드
@@ -64,6 +65,46 @@ public class courseController {
         model.addAttribute("departmentName", departmentName);
         model.addAttribute("grade", grade);
         model.addAttribute("search", search);
+    }
+
+    // 공통 데이터 추가 메서드
+    private String handleCourseAction(
+            String studentId,
+            Long courseId,
+            String returnPage,
+            String subjectId,
+            String subjectName,
+            String professorName,
+            String departmentName,
+            Integer grade,
+            String search,
+            RedirectAttributes redirectAttributes,
+            Model model,
+            String actionType
+    ) {
+        String resultMessage;
+        if ("cart".equals(actionType)) {
+            resultMessage = courseCartService.addToCart(studentId, courseId);
+        } else if ("registration".equals(actionType)) {
+            resultMessage = courseRegistrationService.addToCourseRegistration(studentId, courseId);
+        } else {
+            throw new IllegalArgumentException("Invalid action type: " + actionType);
+        }
+
+        // 검색 조건에 맞는 강좌 목록 조회
+        addSearchAttributes(subjectId, subjectName, professorName, departmentName, grade, search, model);
+
+        // 결과 메시지를 리다이렉트하여 전달
+        redirectAttributes.addFlashAttribute("message", resultMessage);
+        redirectAttributes.addFlashAttribute("subjectId", subjectId);
+        redirectAttributes.addFlashAttribute("subjectName", subjectName);
+        redirectAttributes.addFlashAttribute("professorName", professorName);
+        redirectAttributes.addFlashAttribute("departmentName", departmentName);
+        redirectAttributes.addFlashAttribute("grade", grade);
+        redirectAttributes.addFlashAttribute("search", search);
+
+        // 페이지로 리다이렉트
+        return "redirect:/" + returnPage;
     }
 
     @GetMapping("/")
@@ -109,22 +150,24 @@ public class courseController {
             RedirectAttributes redirectAttributes,
             Model model
     ) {
-        // 서비스 호출
-        String resultMessage = courseCartService.addToCart(studentId, courseId);
+        return handleCourseAction(studentId, courseId, returnPage, subjectId, subjectName, professorName, departmentName, grade, search, redirectAttributes, model, "cart");
+    }
 
-        // 검색 조건에 맞는 강좌 목록 조회
-        addSearchAttributes(subjectId, subjectName, professorName, departmentName, grade, search, model);
-
-        // 결과 메시지를 리다이렉트하여 전달
-        redirectAttributes.addFlashAttribute("message", resultMessage);
-        redirectAttributes.addFlashAttribute("subjectId", subjectId);
-        redirectAttributes.addFlashAttribute("subjectName", subjectName);
-        redirectAttributes.addFlashAttribute("professorName", professorName);
-        redirectAttributes.addFlashAttribute("departmentName", departmentName);
-        redirectAttributes.addFlashAttribute("grade", grade);
-        redirectAttributes.addFlashAttribute("search", search);
-
-        // 장바구니 페이지로 리다이렉트
-        return "redirect:/" + returnPage;
+    // 수강신청
+    @PostMapping("/addToCourseRegistration")
+    public String addToCourseRegistration(
+            @RequestParam("studentId") String studentId,
+            @RequestParam("courseId") Long courseId,
+            @RequestParam("returnPage") String returnPage,
+            @RequestParam(required = false) String subjectId,
+            @RequestParam(required = false) String subjectName,
+            @RequestParam(required = false) String professorName,
+            @RequestParam(required = false) String departmentName,
+            @RequestParam(required = false) Integer grade,
+            @RequestParam(required = false) String search,
+            RedirectAttributes redirectAttributes,
+            Model model
+    ) {
+        return handleCourseAction(studentId, courseId, returnPage, subjectId, subjectName, professorName, departmentName, grade, search, redirectAttributes, model, "registration");
     }
 }

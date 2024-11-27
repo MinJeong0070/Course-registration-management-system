@@ -62,30 +62,30 @@
     <div id="content-area" class="p-4">
         <div class="flex">
             <form th:action="@{/searchCourses}" method="get" class="flex w-full" accept-charset="UTF-8">
-                <input type="hidden" name="returnPage" th:value="'index'"/>
-                <select name="type" class="border border-gray-300 rounded-md p-2">
+                <input type="hidden" name="returnPage" th:value="''"/>
+                <select name="type" class="border border-gray-300 rounded-md p-2" th:value="type">
                     <option value="">유형</option>
-                    <option value="전체">전체</option>
-                    <option value="장바구니">장바구니</option>
+                    <option value="전체" th:selected="${type == '전체'}">전체</option>
+                    <option value="장바구니" th:selected="${type == '장바구니'}">장바구니</option>
                 </select>
-                <select name="departmentName" class="border border-gray-300 rounded-md p-2">
+                <select name="departmentName" class="border border-gray-300 rounded-md p-2" th:value="${departmentName}">
                     <option value="">개설학과</option>
-                    <option value="컴퓨터공학과">컴퓨터공학과</option>
+                    <option value="컴퓨터공학과" th:selected="${departmentName == '컴퓨터공학과'}">컴퓨터공학과</option>
                 </select>
                 <select name="grade" class="border border-gray-300 rounded-md p-2">
                     <option value="">학년</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
+                    <option value="1" th:selected="${grade == 1}">1</option>
+                    <option value="2" th:selected="${grade == 2}">2</option>
+                    <option value="3" th:selected="${grade == 3}">3</option>
+                    <option value="4" th:selected="${grade == 4}">4</option>
                 </select>
-                <input name="search" class="border border-gray-300 rounded-md p-2 w-1/3" placeholder="과목번호, 담당 교수" type="text">
+                <input name="search" class="border border-gray-300 rounded-md p-2 w-1/3" placeholder="과목번호, 담당 교수" type="text" th:value="${search}">
                 <button type="submit" class="px-4 py-2 rounded">검색</button>
             </form>
         </div>
 
         <!-- 결과 메시지 표시 영역 -->
-        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+        <div th:if="${message}" class="alert alert-info mt-4" th:text="${message}"></div>
 
         <table class="w-full border-collapse border">
             <thead>
@@ -118,7 +118,18 @@
                 <td th:text="${courses.professorName}"></td>
                 <td th:text="${courses.enrollmentCapacity}"></td>
                 <td class="border text-center">
-                    <button class="px-2 py-1 rounded">신청</button>
+                    <form th:action="@{/addToCourseRegistration}" method="post">
+                        <input type="hidden" name="returnPage" th:value="''"/>
+                        <input type="hidden" name="studentId" value="20203019"/>
+                        <input type="hidden" name="courseId" th:value="${courses.courseId}"/>
+                        <input type="hidden" name="subjectId" th:value="${subjectId}"/>
+                        <input type="hidden" name="subjectName" th:value="${subjectName}"/>
+                        <input type="hidden" name="professorName" th:value="${professorName}"/>
+                        <input type="hidden" name="departmentName" th:value="${departmentName}"/>
+                        <input type="hidden" name="grade" th:value="${grade}"/>
+                        <input type="hidden" name="search" th:value="${search}"/>
+                        <button type="submit" class="px-2 py-1 rounded">신청</button>
+                    </form>
                 </td>
                 <td></td>
             </tr>
