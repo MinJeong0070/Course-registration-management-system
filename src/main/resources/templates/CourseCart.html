@@ -7,7 +7,7 @@
     <link rel="stylesheet" th:href="@{https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/stylesheet.css}">
 </head>
-<body data-page="enrollment">
+<body data-page="courseCart">
 <div id="pra">
 
     <header class="header">
@@ -52,7 +52,7 @@
                     <a class="nav-link" th:href="@{CourseCart}" data-page="courseCart">장바구니</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0);" data-page="cartStatus">장바구니 현황</a>
+                    <a class="nav-link" th:href="@{CourseCartStatus(studentId=20203019)}" data-page="cartStatus">장바구니 현황</a>
                 </li>
 
             </ul>
@@ -97,6 +97,7 @@
                 <th class="px-2 py-1 text-center">강의실</th>
                 <th class="px-2 py-1 text-center">강의시간</th>
                 <th class="px-2 py-1 text-center">담당교수</th>
+                <th class="px-2 py-1 text-center">수강인원</th>
                 <th class="px-2 py-1 text-center">제한인원</th>
                 <th class="px-2 py-1 text-center">담기</th>
                 <th class="px-2 py-1 text-center">비고</th>
@@ -115,6 +116,7 @@
                 <td th:text="${courses.classroom}"></td>
                 <td th:text="${courses.lectureTime}"></td>
                 <td th:text="${courses.professorName}"></td>
+                <td th:text="${courses.currentEnrollment}"></td>
                 <td th:text="${courses.enrollmentCapacity}"></td>
                 <td class="border text-center">
                     <form th:action="@{/addToCart}" method="post">

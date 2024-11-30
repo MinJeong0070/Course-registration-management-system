@@ -1,21 +1,21 @@
 package org.example.deu_courseregistration.service;
 
-import org.example.deu_courseregistration.dto.courseDto;
-import org.example.deu_courseregistration.repository.courseRepository;
+import org.example.deu_courseregistration.dto.CourseDto;
+import org.example.deu_courseregistration.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
 public class CourseService {
-    private final courseRepository courseRepository;
+    private final CourseRepository courseRepository;
 
     @Autowired
-    public CourseService(courseRepository courseRepository) {
+    public CourseService(CourseRepository courseRepository) {
         this.courseRepository = courseRepository;
     }
 
-    public List<courseDto> getAllCustomCourseDetails() {
+    public List<CourseDto> getAllCustomCourseDetails() {
         return courseRepository.findCustomCourseDetails();
     }
 }

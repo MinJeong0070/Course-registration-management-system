@@ -1,29 +1,31 @@
 package org.example.deu_courseregistration.service;
 
 import jakarta.transaction.Transactional;
+import org.example.deu_courseregistration.dto.CourseDto;
 import org.example.deu_courseregistration.entity.Course;
 import org.example.deu_courseregistration.entity.CourseCart;
 import org.example.deu_courseregistration.entity.Student;
 import org.example.deu_courseregistration.entity.courseCartId;
-import org.example.deu_courseregistration.repository.courseCartRepository;
-import org.example.deu_courseregistration.repository.courseRepository;
-import org.example.deu_courseregistration.repository.studentRepository;
+import org.example.deu_courseregistration.repository.CourseCartRepository;
+import org.example.deu_courseregistration.repository.CourseRepository;
+import org.example.deu_courseregistration.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CourseCartService {
     @Autowired
-    private courseCartRepository courseCartRepository;
+    private CourseCartRepository courseCartRepository;
 
     @Autowired
-    private courseRepository courseRepository;
+    private CourseRepository courseRepository;
 
     @Autowired
-    private studentRepository studentRepository;
+    private StudentRepository studentRepository;
 
     @Transactional
     public String addToCart(String studentId, Long courseId) {
@@ -56,5 +58,10 @@ public class CourseCartService {
         courseCartRepository.save(courseCart);
 
         return "장바구니에 강좌를 성공적으로 담았습니다.";
+    }
+
+    // 특정 학생의 장바구니에 있는 강좌 정보를 가져옴
+    public List<CourseDto> getCoursesInCartByStudentId(String studentId) {
+        return courseCartRepository.findCoursesInCartByStudentId(studentId);
     }
 }

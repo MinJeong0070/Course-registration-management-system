@@ -2,9 +2,9 @@ package org.example.deu_courseregistration.service;
 
 import jakarta.transaction.Transactional;
 import org.example.deu_courseregistration.entity.*;
-import org.example.deu_courseregistration.repository.courseRegistrationRepository;
-import org.example.deu_courseregistration.repository.courseRepository;
-import org.example.deu_courseregistration.repository.studentRepository;
+import org.example.deu_courseregistration.repository.CourseRegistrationRepository;
+import org.example.deu_courseregistration.repository.CourseRepository;
+import org.example.deu_courseregistration.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +14,13 @@ import java.util.Optional;
 @Service
 public class CourseRegistrationService {
     @Autowired
-    private courseRegistrationRepository courseRegistrationRepository;
+    private CourseRegistrationRepository courseRegistrationRepository;
 
     @Autowired
-    private courseRepository courseRepository;
+    private CourseRepository courseRepository;
 
     @Autowired
-    private studentRepository studentRepository;
+    private StudentRepository studentRepository;
 
     @Transactional
     public String addToCourseRegistration(String studentId, Long courseId) {

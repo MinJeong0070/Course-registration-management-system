@@ -29,6 +29,9 @@ public class Course {
     private Integer grade;              // 수강학년
 
     @Column(name = "수강인원")
+    private Integer currentEnrollment; // 현재 수강 인원
+
+    @Column(name = "제한인원")
     private Integer enrollmentCapacity; // 최대 수강 인원
 
     @Column(name = "강의시작시간", length = 5)
