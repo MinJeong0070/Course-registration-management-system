@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface courseRegistrationRepository extends JpaRepository<CourseRegistration, courseRegistrationId>{
+public interface CourseRegistrationRepository extends JpaRepository<CourseRegistration, courseRegistrationId>{
 }

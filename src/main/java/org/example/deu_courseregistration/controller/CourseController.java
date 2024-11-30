@@ -1,6 +1,6 @@
 package org.example.deu_courseregistration.controller;
 
-import org.example.deu_courseregistration.dto.courseDto;
+import org.example.deu_courseregistration.dto.CourseDto;
 import org.example.deu_courseregistration.service.CourseCartService;
 import org.example.deu_courseregistration.service.CourseRegistrationService;
 import org.example.deu_courseregistration.service.CourseSearchService;
@@ -16,23 +16,23 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
-public class courseController {
+public class CourseController {
     private final CourseService courseService;
     private final CourseCartService courseCartService;
     private final CourseSearchService courseSearchService;
     private final CourseRegistrationService courseRegistrationService;
 
     @Autowired
-    public courseController(CourseService courseService, CourseCartService courseCartService, CourseSearchService courseSearchService, CourseRegistrationService courseRegistrationService) {
+    public CourseController(CourseService courseService, CourseCartService courseCartService, CourseSearchService courseSearchService, CourseRegistrationService courseRegistrationService) {
         this.courseService = courseService;
         this.courseCartService = courseCartService;
         this.courseSearchService = courseSearchService;
         this.courseRegistrationService = courseRegistrationService;
     }
 
-    // 공통 강좌 데이터 처리 메서드
+    // 전체 강좌 데이터 처리 메서드(수강신청, 장바구니 페이지에서 사용)
     private void addCommonAttributes(Model model, String page) {
-        List<courseDto> courses = courseService.getAllCustomCourseDetails();
+        List<CourseDto> courses = courseService.getAllCustomCourseDetails();
         courses.forEach(course -> {
             if (course.getDepartmentName() == null) {
                 course.setDepartmentName("N/A");
@@ -55,7 +55,7 @@ public class courseController {
         }
 
         // 검색 조건에 맞는 강좌 목록 조회
-        List<courseDto> courses = courseSearchService.searchCourses(subjectId, subjectName, professorName, departmentName, grade);
+        List<CourseDto> courses = courseSearchService.searchCourses(subjectId, subjectName, professorName, departmentName, grade);
 
         // 조회 결과를 모델에 추가하여 뷰에 전달
         model.addAttribute("courses", courses);
@@ -115,8 +115,25 @@ public class courseController {
 
     @GetMapping("/CourseCart")
     public String courseCart(Model model) {
-        addCommonAttributes(model, "courseCart");
+        addCommonAttributes(model, "CourseCart");
         return "CourseCart";
+    }
+
+    @GetMapping("/CourseCartStatus")
+    public String courseCartStatus(@RequestParam String studentId, Model model) {
+        // 특정 학생의 장바구니 데이터를 가져옴
+        List<CourseDto> coursesInCart = courseCartService.getCoursesInCartByStudentId(studentId);
+
+        coursesInCart.forEach(course -> {
+            if (course.getDepartmentName() == null) {
+                course.setDepartmentName("N/A");
+            }
+        });
+
+        model.addAttribute("page", "CourseCartStatus");
+        model.addAttribute("courses", coursesInCart);
+
+        return "CourseCartStatus";
     }
 
     // 강좌 검색 페이지 요청 처리
