@@ -7,7 +7,7 @@
     <link rel="stylesheet" th:href="@{https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/stylesheet.css}">
 </head>
-<body data-page="courseCart">
+<body>
 <div id="pra">
 
     <header class="header">
@@ -43,16 +43,16 @@
                 </div>
 
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/}" data-page="enrollment">수강신청</a>
+                    <a class="nav-link" th:href="@{/}" data-page="index">수강신청</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0);" data-page="confirmation">수강확정/대기내역</a>
+                    <a class="nav-link" th:href="@{CourseRegistrationStatus(studentId=20203019)}" data-page="CourseRegistrationStatus">수강확정/대기내역</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" th:href="@{CourseCart}" data-page="courseCart">장바구니</a>
+                    <a class="nav-link" th:href="@{CourseCart}" data-page="CourseCart">장바구니</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{CourseCartStatus(studentId=20203019)}" data-page="cartStatus">장바구니 현황</a>
+                    <a class="nav-link" th:href="@{CourseCartStatus(studentId=20203019)}" data-page="CourseCartStatus">장바구니 현황</a>
                 </li>
 
             </ul>
@@ -61,7 +61,6 @@
     <div id="content-area" class="p-4">
     <div class="flex">
         <form th:action="@{/searchCourses}" method="get" class="flex w-full" accept-charset="UTF-8">
-            <input type="hidden" name="returnPage" th:value="'CourseCart'"/>
             <select name="type" class="border border-gray-300 rounded-md p-2" th:value="type">
                 <option value="">유형</option>
                 <option value="전체" th:selected="${type == '전체'}">전체</option>

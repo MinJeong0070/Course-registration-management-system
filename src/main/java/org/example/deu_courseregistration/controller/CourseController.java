@@ -1,6 +1,7 @@
 package org.example.deu_courseregistration.controller;
 
 import org.example.deu_courseregistration.dto.CourseDto;
+import org.example.deu_courseregistration.entity.courseRegistrationId;
 import org.example.deu_courseregistration.service.CourseCartService;
 import org.example.deu_courseregistration.service.CourseRegistrationService;
 import org.example.deu_courseregistration.service.CourseSearchService;
@@ -136,6 +137,23 @@ public class CourseController {
         return "CourseCartStatus";
     }
 
+    @GetMapping("/CourseRegistrationStatus")
+    public String courseRegistrationStatus(@RequestParam String studentId, Model model) {
+        // 특정 학생의 수강신청 데이터를 가져옴
+        List<CourseDto> coursesInRegistration = courseRegistrationService.getCoursesInRegistrationByStudentId(studentId);
+
+        coursesInRegistration.forEach(course -> {
+            if (course.getDepartmentName() == null) {
+                course.setDepartmentName("N/A");
+            }
+        });
+
+        model.addAttribute("page", "CourseRegistrationStatus");
+        model.addAttribute("courses", coursesInRegistration);
+
+        return "CourseRegistrationStatus";
+    }
+
     // 강좌 검색 페이지 요청 처리
     @GetMapping("/searchCourses")
     public String getCourses(
@@ -197,5 +215,17 @@ public class CourseController {
         return handleCourseAction(studentId, courseId, returnPage, subjectId, subjectName, professorName, departmentName, grade, search, redirectAttributes, model, "registration");
     }
 
+    @PostMapping("/removeToCart")
+    public String removeCourse(@RequestParam("studentId") String studentId,
+                               @RequestParam("courseId") Long courseId) {
+        // CourseRegistrationId 생성
+        courseRegistrationId id = new courseRegistrationId(studentId, courseId);
+
+        // 삭제 처리
+        courseRegistrationService.deleteCourseRegistration(id);
+
+        // 삭제 후 리다이렉트
+        return "redirect:/CourseRegistrationStatus?studentId=" + studentId;
+
+    }
 }
-// 테스트

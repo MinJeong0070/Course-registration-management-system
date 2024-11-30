@@ -1,6 +1,7 @@
 package org.example.deu_courseregistration.service;
 
 import jakarta.transaction.Transactional;
+import org.example.deu_courseregistration.dto.CourseDto;
 import org.example.deu_courseregistration.entity.*;
 import org.example.deu_courseregistration.repository.CourseRegistrationRepository;
 import org.example.deu_courseregistration.repository.CourseRepository;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -55,6 +57,7 @@ public class CourseRegistrationService {
         return "수강신청이 성공적으로 완료되었습니다.";
     }
 
+    // 수강신청 기간 체크
     public boolean isCourseRegistrationPeriodValid() {
         // 저장 프로시저를 호출하여 수강신청 기간이 유효한지 확인
         Integer isValid = courseRegistrationRepository.checkCourseRegistrationPeriod();
@@ -63,4 +66,15 @@ public class CourseRegistrationService {
         return isValid != null && isValid == 1;
     }
 
+    // 특정 학생의 수강신청 된 강좌 정보를 가져옴
+    public List<CourseDto> getCoursesInRegistrationByStudentId(String studentId) {
+        return courseRegistrationRepository.findCoursesInRegistrationByStudentId(studentId);
+    }
+
+    // 수강신청 취소
+    @Transactional
+    public void deleteCourseRegistration(courseRegistrationId id) {
+        // CourseRegistration 삭제
+        courseRegistrationRepository.deleteById(id);
+    }
 }

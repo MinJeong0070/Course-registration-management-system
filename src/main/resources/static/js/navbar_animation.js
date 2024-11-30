@@ -45,19 +45,19 @@ $(".navbar-toggler").click(function () {
 });
 
 // --------------add active class-on another-page move----------
-jQuery(document).ready(function ($) {
-    // Get current path and find target link
-    var path = window.location.pathname.split("/").pop();
-
-    // Account for home page with empty path
-    if (path == "") {
-        path = "index.html";
-    }
-
-    var target = $('#navbarSupportedContent ul li a[th:href="@{' + path + '}"]');
-    // Add active class to target link
-    target.parent().addClass("active");
-});
+// jQuery(document).ready(function ($) {
+//     // Get current path and find target link
+//     var path = window.location.pathname.split("/").pop();
+//
+//     // Account for home page with empty path
+//     if (path == "") {
+//         path = "index.html";
+//     }
+//
+//     //var target = $('#navbarSupportedContent ul li a[th:href="@{' + path + '}"]');
+//     // Add active class to target link
+//     //target.parent().addClass("active");
+// });
 
 // jQuery(document).ready(function ($) {
 //     // 현재 페이지를 식별하기 위한 page 변수를 사용
