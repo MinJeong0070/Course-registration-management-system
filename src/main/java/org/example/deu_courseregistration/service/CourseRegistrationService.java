@@ -54,4 +54,13 @@ public class CourseRegistrationService {
 
         return "수강신청이 성공적으로 완료되었습니다.";
     }
+
+    public boolean isCourseRegistrationPeriodValid() {
+        // 저장 프로시저를 호출하여 수강신청 기간이 유효한지 확인
+        Integer isValid = courseRegistrationRepository.checkCourseRegistrationPeriod();
+
+        // 반환 값이 1이면 유효한 수강신청 기간, 0이면 아닌 경우
+        return isValid != null && isValid == 1;
+    }
+
 }

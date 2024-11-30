@@ -185,6 +185,16 @@ public class CourseController {
             RedirectAttributes redirectAttributes,
             Model model
     ) {
+        // 수강신청 가능 여부 확인
+        boolean isRegistrationPeriodValid = courseRegistrationService.isCourseRegistrationPeriodValid();
+
+        // 수강신청이 불가능한 경우
+        if (!isRegistrationPeriodValid) {
+            redirectAttributes.addFlashAttribute("message", "현재 수강신청 기간이 아닙니다.");
+            return "redirect:/";  // 또는 수강신청 페이지로 리디렉션
+        }
+
         return handleCourseAction(studentId, courseId, returnPage, subjectId, subjectName, professorName, departmentName, grade, search, redirectAttributes, model, "registration");
     }
+
 }
