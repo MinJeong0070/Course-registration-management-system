@@ -2,6 +2,7 @@ package org.example.deu_courseregistration.controller;
 
 import org.example.deu_courseregistration.dto.CourseDto;
 import org.example.deu_courseregistration.entity.courseRegistrationId;
+import org.example.deu_courseregistration.exception.CustomEnrollmentException;
 import org.example.deu_courseregistration.service.CourseCartService;
 import org.example.deu_courseregistration.service.CourseRegistrationService;
 import org.example.deu_courseregistration.service.CourseSearchService;
@@ -84,12 +85,18 @@ public class CourseController {
             String actionType
     ) {
         String resultMessage;
-        if ("cart".equals(actionType)) {
-            resultMessage = courseCartService.addToCart(studentId, courseId);
-        } else if ("registration".equals(actionType)) {
-            resultMessage = courseRegistrationService.addToCourseRegistration(studentId, courseId);
-        } else {
-            throw new IllegalArgumentException("Invalid action type: " + actionType);
+        try {
+            if ("cart".equals(actionType)) {
+                resultMessage = courseCartService.addToCart(studentId, courseId);
+            } else if ("registration".equals(actionType)) {
+                resultMessage = courseRegistrationService.addToCourseRegistration(studentId, courseId);
+            } else {
+                throw new IllegalArgumentException("Invalid action type: " + actionType);
+            }
+        } catch (CustomEnrollmentException e) {
+            resultMessage = e.getMessage(); // 트리거 예외 메시지 처리
+        } catch (Exception e) {
+            resultMessage = "알 수 없는 오류가 발생했습니다.(handleCourseAction)";
         }
 
         // 검색 조건에 맞는 강좌 목록 조회
@@ -212,7 +219,18 @@ public class CourseController {
             return "redirect:/";  // 또는 수강신청 페이지로 리디렉션
         }
 
-        return handleCourseAction(studentId, courseId, returnPage, subjectId, subjectName, professorName, departmentName, grade, search, redirectAttributes, model, "registration");
+        try {
+            // 수강신청 로직 처리
+            return handleCourseAction(studentId, courseId, returnPage, subjectId, subjectName, professorName, departmentName, grade, search, redirectAttributes, model, "registration");
+        } catch (CustomEnrollmentException e) {
+            // 트리거 예외 처리
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            return "redirect:/" + returnPage; // 이전 페이지로 리디렉션
+        } catch (Exception e) {
+            // 기타 예외 처리
+            redirectAttributes.addFlashAttribute("message", "알 수 없는 오류가 발생했습니다.(addToCourseRegistration)");
+            return "redirect:/"; // 또는 에러 페이지로 리디렉션
+        }
     }
 
     @PostMapping("/removeToCart")
