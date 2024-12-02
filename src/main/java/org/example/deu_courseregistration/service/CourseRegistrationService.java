@@ -8,10 +8,12 @@ import org.example.deu_courseregistration.exception.CustomEnrollmentException;
 import org.example.deu_courseregistration.repository.CourseRegistrationRepository;
 import org.example.deu_courseregistration.repository.CourseRepository;
 import org.example.deu_courseregistration.repository.StudentRepository;
+import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.exception.GenericJDBCException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,7 +80,23 @@ public class CourseRegistrationService {
                 throw new CustomEnrollmentException(normalizedErrorMessage); // CustomEnrollmentException 던지기
             }
             throw new RuntimeException("수강신청 처리 중 오류가 발생했습니다.");
-        } catch (Exception e) {
+        } catch (ConstraintViolationException e) {
+            System.out.println("ConstraintViolationException 발생: " + e.getMessage());
+            Throwable rootCause = e.getCause();
+            if (rootCause instanceof SQLIntegrityConstraintViolationException) {
+                String errorMessage = parseOracleErrorMessage(rootCause);
+                System.out.println("Parsed Error Message: [" + errorMessage + "]");
+
+                // 문자열 정규화 및 조건 확인
+                String normalizedErrorMessage = errorMessage.replace("\n", "").replace("\r", "").trim();
+                if (normalizedErrorMessage.contains("이미 대기")) {
+                    throw new CustomEnrollmentException(normalizedErrorMessage); // CustomEnrollmentException 던지기
+                }
+                throw new RuntimeException("수강신청 처리 중 오류가 발생했습니다.");
+            }
+            throw new RuntimeException("ConstraintViolation 처리 중 오류가 발생했습니다.");
+        }
+        catch (Exception e) {
             System.out.println("Exception 발생: " + e.getClass().getName());
             if (e.getCause() != null) {
                 System.out.println("Root Cause: " + e.getCause().getClass().getName());
@@ -120,6 +138,8 @@ public class CourseRegistrationService {
             for (String line : lines) {
                 if (line.contains("ERROR_CODE:FULL_CAPACITY")) {
                     return "정원이 초과되어 대기자로 등록되었습니다.";
+                } else if (line.contains("무결성 제약 조건")) {
+                    return "이미 대기중인 강좌입니다.";
                 }
             }
         }
