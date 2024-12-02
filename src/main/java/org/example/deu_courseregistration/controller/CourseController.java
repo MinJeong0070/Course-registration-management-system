@@ -3,11 +3,9 @@ package org.example.deu_courseregistration.controller;
 import org.example.deu_courseregistration.dto.CourseDto;
 import org.example.deu_courseregistration.entity.courseCartId;
 import org.example.deu_courseregistration.entity.courseRegistrationId;
+import org.example.deu_courseregistration.entity.courseWaitlistId;
 import org.example.deu_courseregistration.exception.CustomEnrollmentException;
-import org.example.deu_courseregistration.service.CourseCartService;
-import org.example.deu_courseregistration.service.CourseRegistrationService;
-import org.example.deu_courseregistration.service.CourseSearchService;
-import org.example.deu_courseregistration.service.CourseService;
+import org.example.deu_courseregistration.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,13 +22,19 @@ public class CourseController {
     private final CourseCartService courseCartService;
     private final CourseSearchService courseSearchService;
     private final CourseRegistrationService courseRegistrationService;
+    private final CourseWaitlistService courseWaitlistService;
 
     @Autowired
-    public CourseController(CourseService courseService, CourseCartService courseCartService, CourseSearchService courseSearchService, CourseRegistrationService courseRegistrationService) {
+    public CourseController(CourseService courseService,
+                            CourseCartService courseCartService,
+                            CourseSearchService courseSearchService,
+                            CourseRegistrationService courseRegistrationService,
+                            CourseWaitlistService courseWaitlistService) {
         this.courseService = courseService;
         this.courseCartService = courseCartService;
         this.courseSearchService = courseSearchService;
         this.courseRegistrationService = courseRegistrationService;
+        this.courseWaitlistService = courseWaitlistService;
     }
 
     // 전체 강좌 데이터 처리 메서드(수강신청, 장바구니 페이지에서 사용)
@@ -116,18 +120,21 @@ public class CourseController {
         return "redirect:/" + returnPage;
     }
 
+    // 메인 수강신청 페이지
     @GetMapping("/")
     public String index(Model model) {
         addCommonAttributes(model, "enrollment");
         return "index";
     }
 
+    // 장바구니 페이지
     @GetMapping("/CourseCart")
     public String courseCart(Model model) {
         addCommonAttributes(model, "CourseCart");
         return "CourseCart";
     }
 
+    // 장바구니 현황 페이지
     @GetMapping("/CourseCartStatus")
     public String courseCartStatus(@RequestParam String studentId, Model model) {
         // 특정 학생의 장바구니 데이터를 가져옴
@@ -145,6 +152,7 @@ public class CourseController {
         return "CourseCartStatus";
     }
 
+    // 수강신청 현황 페이지
     @GetMapping("/CourseRegistrationStatus")
     public String courseRegistrationStatus(@RequestParam String studentId, Model model) {
         // 특정 학생의 수강신청 데이터를 가져옴
@@ -160,6 +168,24 @@ public class CourseController {
         model.addAttribute("courses", coursesInRegistration);
 
         return "CourseRegistrationStatus";
+    }
+
+    //수강대기 현황 페이지
+    @GetMapping("/CourseWaitlistStatus")
+    public String courseWaitlistStatus(@RequestParam String studentId, Model model) {
+        // 특정 학생의 수강대기 데이터를 가져옴
+        List<CourseDto> coursesInWaitlist = courseWaitlistService.getCoursesInWaitlistByStudentId(studentId);
+
+        coursesInWaitlist.forEach(course -> {
+            if (course.getDepartmentName() == null) {
+                course.setDepartmentName("N/A");
+            }
+        });
+
+        model.addAttribute("page", "CourseWaitlistStatus");
+        model.addAttribute("courses", coursesInWaitlist);
+
+        return "CourseWaitlistStatus";
     }
 
     // 강좌 검색 페이지 요청 처리
@@ -246,6 +272,21 @@ public class CourseController {
 
         // 삭제 후 리다이렉트
         return "redirect:/CourseRegistrationStatus?studentId=" + studentId;
+
+    }
+
+    // 수강신청 취소
+    @PostMapping("/removeCourseWaitlist")
+    public String removeCourseWaitlist(@RequestParam("studentId") String studentId,
+                               @RequestParam("courseId") Long courseId) {
+        // CourseRegistrationId 생성
+        courseWaitlistId id = new courseWaitlistId(studentId, courseId);
+
+        // 삭제 처리
+        courseWaitlistService.deleteCourseWaitlist(id);
+
+        // 삭제 후 리다이렉트
+        return "redirect:/CourseWaitlistStatus?studentId=" + studentId;
 
     }
 

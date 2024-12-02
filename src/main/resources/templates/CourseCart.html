@@ -46,7 +46,10 @@
                     <a class="nav-link" th:href="@{/}" data-page="index">수강신청</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{CourseRegistrationStatus(studentId=20203019)}" data-page="CourseRegistrationStatus">수강확정/대기내역</a>
+                    <a class="nav-link" th:href="@{CourseRegistrationStatus(studentId=20203019)}" data-page="CourseRegistrationStatus">수강신청내역</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{CourseWaitlistStatus(studentId=20203019)}" data-page="CourseWaitlistStatus">수강대기내역</a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" th:href="@{CourseCart}" data-page="CourseCart">장바구니</a>
