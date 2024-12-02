@@ -2,10 +2,7 @@ package org.example.deu_courseregistration.service;
 
 import jakarta.transaction.Transactional;
 import org.example.deu_courseregistration.dto.CourseDto;
-import org.example.deu_courseregistration.entity.Course;
-import org.example.deu_courseregistration.entity.CourseCart;
-import org.example.deu_courseregistration.entity.Student;
-import org.example.deu_courseregistration.entity.courseCartId;
+import org.example.deu_courseregistration.entity.*;
 import org.example.deu_courseregistration.repository.CourseCartRepository;
 import org.example.deu_courseregistration.repository.CourseRepository;
 import org.example.deu_courseregistration.repository.StudentRepository;
@@ -63,5 +60,12 @@ public class CourseCartService {
     // 특정 학생의 장바구니에 있는 강좌 정보를 가져옴
     public List<CourseDto> getCoursesInCartByStudentId(String studentId) {
         return courseCartRepository.findCoursesInCartByStudentId(studentId);
+    }
+
+    // 장바구니 취소
+    @Transactional
+    public void deleteCourseCart(courseCartId id) {
+        // CourseCart 삭제
+        courseCartRepository.deleteById(id);
     }
 }

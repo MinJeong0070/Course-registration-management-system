@@ -94,7 +94,9 @@
                 <td th:text="${courses.enrollmentCapacity}"></td>
                 <td class="border text-center">
                     <form th:action="@{/removeToCart}" method="post">
-                        <button type="submit" class="px-2 py-1 rounded">삭제</button>
+                        <input type="hidden" name="studentId" value="20203019"/>
+                        <input type="hidden" name="courseId" th:value="${courses.courseId}"/>
+                        <button type="submit" class="px-2 py-1 rounded">취소</button>
                     </form>
                 </td>
                 <td></td>

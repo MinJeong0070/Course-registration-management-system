@@ -1,6 +1,7 @@
 package org.example.deu_courseregistration.controller;
 
 import org.example.deu_courseregistration.dto.CourseDto;
+import org.example.deu_courseregistration.entity.courseCartId;
 import org.example.deu_courseregistration.entity.courseRegistrationId;
 import org.example.deu_courseregistration.exception.CustomEnrollmentException;
 import org.example.deu_courseregistration.service.CourseCartService;
@@ -233,7 +234,8 @@ public class CourseController {
         }
     }
 
-    @PostMapping("/removeToCart")
+    // 수강신청 취소
+    @PostMapping("/removeCourse")
     public String removeCourse(@RequestParam("studentId") String studentId,
                                @RequestParam("courseId") Long courseId) {
         // CourseRegistrationId 생성
@@ -244,6 +246,21 @@ public class CourseController {
 
         // 삭제 후 리다이렉트
         return "redirect:/CourseRegistrationStatus?studentId=" + studentId;
+
+    }
+
+    // 장바구니 취소
+    @PostMapping("/removeToCart")
+    public String removeToCart(@RequestParam("studentId") String studentId,
+                               @RequestParam("courseId") Long courseId) {
+        // CourseRegistrationId 생성
+        courseCartId id = new courseCartId(studentId, courseId);
+
+        // 삭제 처리
+        courseCartService.deleteCourseCart(id);
+
+        // 삭제 후 리다이렉트
+        return "redirect:/CourseCartStatus?studentId=" + studentId;
 
     }
 }
