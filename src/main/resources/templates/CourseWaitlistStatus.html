@@ -76,8 +76,7 @@
                 <th class="px-2 py-1 text-center">강의실</th>
                 <th class="px-2 py-1 text-center">강의시간</th>
                 <th class="px-2 py-1 text-center">담당교수</th>
-                <th class="px-2 py-1 text-center">수강인원</th>
-                <th class="px-2 py-1 text-center">제한인원</th>
+                <th class="px-2 py-1 text-center">대기순번</th>
                 <th class="px-2 py-1 text-center">취소</th>
                 <th class="px-2 py-1 text-center">비고</th>
             </tr>
@@ -95,8 +94,7 @@
                 <td th:text="${courses.classroom}"></td>
                 <td th:text="${courses.lectureTime}"></td>
                 <td th:text="${courses.professorName}"></td>
-                <td th:text="${courses.currentEnrollment}"></td>
-                <td th:text="${courses.enrollmentCapacity}"></td>
+                <td th:text="${courses.waitlistPosition}"></td>
                 <td class="border text-center">
                     <form th:action="@{/removeCourseWaitlist}" method="post">
                         <input type="hidden" name="studentId" value="20203019"/>

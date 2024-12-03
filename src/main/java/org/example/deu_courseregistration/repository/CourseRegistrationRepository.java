@@ -30,7 +30,8 @@ public interface CourseRegistrationRepository extends JpaRepository<CourseRegist
             "       CONCAT(c.day, ', ', c.courseStartTime, ' - ', c.courseEndTime), " + // 강의시간
             "       p.professorName, " +           // 교수 이름
             "       c.currentEnrollment, " +       // 수강인원
-            "       c.enrollmentCapacity) " +      // 제한인원
+            "       c.enrollmentCapacity, " +      // 제한인원
+            "       null) " +                      // 대기순번(null)
             "FROM CourseRegistration cr " +
             "JOIN cr.courseId c " +                // 장바구니와 강좌 JOIN
             "JOIN c.subject s " +                  // 강좌와 교과목 JOIN

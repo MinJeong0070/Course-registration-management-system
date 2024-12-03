@@ -24,7 +24,8 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             "       CONCAT(c.day, ', ', c.courseStartTime, ' - ', c.courseEndTime), " + // 강의시간
             "       c.professor.professorName, " +  // 교수 이름
             "       c.currentEnrollment, " +  // 수강인원
-            "       c.enrollmentCapacity) " +       // 제한인원
+            "       c.enrollmentCapacity, " +      // 제한인원
+            "       null) " +                      // 대기순번(null)
             "FROM Course c " +
 
             // 또한 JPQL의 경우 엔티티에서 관계 필드로 직접 조인이 되어있으면 ON절 생략(추가적인 JOIN이 필요할 경우에 ON절 사용)
@@ -37,7 +38,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 @Query("SELECT new org.example.deu_courseregistration.dto.CourseDto(" +
         "c.courseId, d.departmentName, s.subjectId, s.subjectName, s.credits, " +
         "c.grade, c.classroom, CONCAT(c.courseStartTime, ' - ', c.courseEndTime, ', ', c.day), " +
-        "p.professorName, c.currentEnrollment, c.enrollmentCapacity) " +
+        "p.professorName, c.currentEnrollment, c.enrollmentCapacity, null) " +
         "FROM Course c " +
         "JOIN c.subject s " +
         "JOIN s.department d " +

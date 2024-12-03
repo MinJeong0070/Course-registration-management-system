@@ -23,8 +23,9 @@ public interface CourseWaitlistRepository extends JpaRepository<CourseWaitlist, 
             "       c.classroom, " +               // 강의실
             "       CONCAT(c.day, ', ', c.courseStartTime, ' - ', c.courseEndTime), " + // 강의시간
             "       p.professorName, " +           // 교수 이름
-            "       c.currentEnrollment, " +       // 수강인원
-            "       c.enrollmentCapacity) " +      // 제한인원
+            "       null, " +                      // 수강인원(null)
+            "       null, " +                      // 제한인원(null)
+            "       cw.waitlistPosition) " +       // 대기순번
             "FROM CourseWaitlist cw " +
             "JOIN cw.courseId c " +                // 장바구니와 강좌 JOIN
             "JOIN c.subject s " +                  // 강좌와 교과목 JOIN
