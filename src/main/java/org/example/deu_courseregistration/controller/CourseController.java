@@ -12,13 +12,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
 @Controller
-//@SessionAttributes("courses")  // courses를 세션에 저장하여 리다이렉트 후에도 접근 가능
 public class CourseController {
     private final CourseService courseService;
     private final CourseCartService courseCartService;
