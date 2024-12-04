@@ -62,7 +62,8 @@
         <div class="flex">
             <form th:action="@{/searchCourses}" method="get" class="flex w-full" accept-charset="UTF-8">
                 <input type="hidden" name="returnPage" th:value="''"/>
-                <select name="type" class="border border-gray-300 rounded-md p-2" th:value="type">
+                <input type="hidden" name="studentId" th:value="'20203019'"/>
+                <select name="type" class="border border-gray-300 rounded-md p-2" th:value="${type}">
                     <option value="">유형</option>
                     <option value="전체" th:selected="${type == '전체'}">전체</option>
                     <option value="장바구니" th:selected="${type == '장바구니'}">장바구니</option>

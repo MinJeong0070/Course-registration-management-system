@@ -31,6 +31,7 @@ public interface CourseWaitlistRepository extends JpaRepository<CourseWaitlist, 
             "JOIN c.subject s " +                  // 강좌와 교과목 JOIN
             "JOIN s.department d " +               // 교과목과 학과 JOIN
             "JOIN c.professor p " +                // 강좌와 교수 JOIN
-            "WHERE cw.studentId.studentId = :studentId") // 특정 학생의 수강신청내역
+            "WHERE cw.studentId.studentId = :studentId")
+    // 특정 학생의 수강신청내역
     List<CourseDto> findCoursesInWaitlistByStudentId(@Param("studentId") String studentId);
 }

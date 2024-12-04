@@ -22,4 +22,3 @@ public class CourseDto {
     private Integer enrollmentCapacity; // 제한 인원
     private Integer waitlistPosition;   // 대기순번
 }
-

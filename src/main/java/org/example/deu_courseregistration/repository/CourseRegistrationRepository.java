@@ -37,7 +37,8 @@ public interface CourseRegistrationRepository extends JpaRepository<CourseRegist
             "JOIN c.subject s " +                  // 강좌와 교과목 JOIN
             "JOIN s.department d " +               // 교과목과 학과 JOIN
             "JOIN c.professor p " +                // 강좌와 교수 JOIN
-            "WHERE cr.studentId.studentId = :studentId") // 특정 학생의 수강신청내역
+            "WHERE cr.studentId.studentId = :studentId")
+    // 특정 학생의 수강신청내역
     List<CourseDto> findCoursesInRegistrationByStudentId(@Param("studentId") String studentId);
 }
 

@@ -67,8 +67,7 @@ public class CourseRegistrationService {
 
             System.out.println("수강신청 완료");
             return "수강신청이 성공적으로 완료되었습니다.";
-        }
-        catch (GenericJDBCException e) {
+        } catch (GenericJDBCException e) {
             System.out.println("GenericJDBCException 발생: " + e.getMessage());
             Throwable rootCause = e.getCause();
             String errorMessage = parseOracleErrorMessage(rootCause);
@@ -95,8 +94,7 @@ public class CourseRegistrationService {
                 throw new RuntimeException("수강신청 처리 중 오류가 발생했습니다.");
             }
             throw new RuntimeException("ConstraintViolation 처리 중 오류가 발생했습니다.");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("Exception 발생: " + e.getClass().getName());
             if (e.getCause() != null) {
                 System.out.println("Root Cause: " + e.getCause().getClass().getName());

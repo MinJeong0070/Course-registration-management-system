@@ -22,4 +22,3 @@ public class CourseCart {
     @JoinColumn(name = "강좌번호", referencedColumnName = "강좌번호")
     private Course courseId;
 }
-

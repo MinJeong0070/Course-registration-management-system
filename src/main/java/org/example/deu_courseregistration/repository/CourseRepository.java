@@ -1,10 +1,12 @@
 package org.example.deu_courseregistration.repository;
+
 import org.example.deu_courseregistration.dto.CourseDto;
 import org.example.deu_courseregistration.entity.Course;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
 @Repository
@@ -31,27 +33,28 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             // 또한 JPQL의 경우 엔티티에서 관계 필드로 직접 조인이 되어있으면 ON절 생략(추가적인 JOIN이 필요할 경우에 ON절 사용)
             "JOIN c.subject s " +                   // 강좌와 교과목 JOIN
             "JOIN s.department d " +                // 교과목과 학과 JOIN
-            "JOIN c.professor p")                   // 강좌와 교수 JOIN
+            "JOIN c.professor p")
+    // 강좌와 교수 JOIN
     List<CourseDto> findCustomCourseDetails();
 
     // 강좌 검색
-@Query("SELECT new org.example.deu_courseregistration.dto.CourseDto(" +
-        "c.courseId, d.departmentName, s.subjectId, s.subjectName, s.credits, " +
-        "c.grade, c.classroom, CONCAT(c.courseStartTime, ' - ', c.courseEndTime, ', ', c.day), " +
-        "p.professorName, c.currentEnrollment, c.enrollmentCapacity, null) " +
-        "FROM Course c " +
-        "JOIN c.subject s " +
-        "JOIN s.department d " +
-        "JOIN c.professor p " +
-        "WHERE (:subjectId IS NULL OR s.subjectId = :subjectId) " +
-        "AND (:subjectName IS NULL OR s.subjectName LIKE CONCAT('%', :subjectName, '%')) " +
-        "AND (:professorName IS NULL OR p.professorName LIKE CONCAT('%', :professorName, '%')) " +
-        "AND (:departmentName IS NULL OR d.departmentName LIKE CONCAT('%', :departmentName, '%')) " +
-        "AND (:grade IS NULL OR c.grade = :grade)")
-List<CourseDto> searchCourses(
-        @Param("subjectId") String subjectId,
-        @Param("subjectName") String subjectName,
-        @Param("professorName") String professorName,
-        @Param("departmentName") String departmentName,
-        @Param("grade") Integer grade);
+    @Query("SELECT new org.example.deu_courseregistration.dto.CourseDto(" +
+            "c.courseId, d.departmentName, s.subjectId, s.subjectName, s.credits, " +
+            "c.grade, c.classroom, CONCAT(c.courseStartTime, ' - ', c.courseEndTime, ', ', c.day), " +
+            "p.professorName, c.currentEnrollment, c.enrollmentCapacity, null) " +
+            "FROM Course c " +
+            "JOIN c.subject s " +
+            "JOIN s.department d " +
+            "JOIN c.professor p " +
+            "WHERE (:subjectId IS NULL OR s.subjectId = :subjectId) " +
+            "AND (:subjectName IS NULL OR s.subjectName LIKE CONCAT('%', :subjectName, '%')) " +
+            "AND (:professorName IS NULL OR p.professorName LIKE CONCAT('%', :professorName, '%')) " +
+            "AND (:departmentName IS NULL OR d.departmentName LIKE CONCAT('%', :departmentName, '%')) " +
+            "AND (:grade IS NULL OR c.grade = :grade)")
+    List<CourseDto> searchCourses(
+            @Param("subjectId") String subjectId,
+            @Param("subjectName") String subjectName,
+            @Param("professorName") String professorName,
+            @Param("departmentName") String departmentName,
+            @Param("grade") Integer grade);
 }

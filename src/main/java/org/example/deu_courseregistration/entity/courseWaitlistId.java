@@ -1,8 +1,9 @@
 package org.example.deu_courseregistration.entity;
 
 import jakarta.persistence.*;
-        import lombok.*;
-        import java.util.Objects;
+import lombok.*;
+
+import java.util.Objects;
 
 @Embeddable
 @Getter

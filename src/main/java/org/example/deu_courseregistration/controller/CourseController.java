@@ -12,11 +12,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
 @Controller
+//@SessionAttributes("courses")  // courses를 세션에 저장하여 리다이렉트 후에도 접근 가능
 public class CourseController {
     private final CourseService courseService;
     private final CourseCartService courseCartService;
@@ -51,7 +53,7 @@ public class CourseController {
     }
 
     // 공통 검색 조건 설정
-    private void addSearchAttributes(String subjectId, String subjectName, String professorName, String departmentName, Integer grade, String search, Model model) {
+    private void addSearchAttributes(String studentId, String subjectId, String subjectName, String professorName, String departmentName, Integer grade, String search, String type, Model model) {
         // 입력값이 숫자면 교과목번호로, 한글이면 교수이름으로 검색 조건 추가
         if (search != null && !search.isEmpty()) {
             if (search.matches("\\d+")) {
@@ -62,16 +64,18 @@ public class CourseController {
         }
 
         // 검색 조건에 맞는 강좌 목록 조회
-        List<CourseDto> courses = courseSearchService.searchCourses(subjectId, subjectName, professorName, departmentName, grade);
+        List<CourseDto> courses = courseSearchService.searchCourses(studentId, subjectId, subjectName, professorName, departmentName, grade, type);
 
         // 조회 결과를 모델에 추가하여 뷰에 전달
         model.addAttribute("courses", courses);
+        model.addAttribute("studentId", studentId);
         model.addAttribute("subjectId", subjectId);
         model.addAttribute("subjectName", subjectName);
         model.addAttribute("professorName", professorName);
         model.addAttribute("departmentName", departmentName);
         model.addAttribute("grade", grade);
         model.addAttribute("search", search);
+        model.addAttribute("type", type);
     }
 
     // 공통 데이터 추가 메서드
@@ -85,6 +89,7 @@ public class CourseController {
             String departmentName,
             Integer grade,
             String search,
+            String type,
             RedirectAttributes redirectAttributes,
             Model model,
             String actionType
@@ -105,7 +110,7 @@ public class CourseController {
         }
 
         // 검색 조건에 맞는 강좌 목록 조회
-        addSearchAttributes(subjectId, subjectName, professorName, departmentName, grade, search, model);
+        addSearchAttributes(studentId, subjectId, subjectName, professorName, departmentName, grade, search, type, model);
 
         // 결과 메시지를 리다이렉트하여 전달
         redirectAttributes.addFlashAttribute("message", resultMessage);
@@ -115,6 +120,7 @@ public class CourseController {
         redirectAttributes.addFlashAttribute("departmentName", departmentName);
         redirectAttributes.addFlashAttribute("grade", grade);
         redirectAttributes.addFlashAttribute("search", search);
+        redirectAttributes.addFlashAttribute("type", type);
 
         // 페이지로 리다이렉트
         return "redirect:/" + returnPage;
@@ -191,16 +197,18 @@ public class CourseController {
     // 강좌 검색 페이지 요청 처리
     @GetMapping("/searchCourses")
     public String getCourses(
+            @RequestParam(required = false) String studentId,
             @RequestParam(required = false) String subjectId,
             @RequestParam(required = false) String subjectName,
             @RequestParam(required = false) String professorName,
             @RequestParam(required = false) String departmentName,
             @RequestParam(required = false) Integer grade,
             @RequestParam(required = false) String search,
+            @RequestParam(required = false) String type,
             @RequestParam(required = false, defaultValue = "index") String returnPage,
             Model model
     ) {
-        addSearchAttributes(subjectId, subjectName, professorName, departmentName, grade, search, model);
+        addSearchAttributes(studentId, subjectId, subjectName, professorName, departmentName, grade, search, type, model);
         return returnPage;
     }
 
@@ -216,10 +224,11 @@ public class CourseController {
             @RequestParam(required = false) String departmentName,
             @RequestParam(required = false) Integer grade,
             @RequestParam(required = false) String search,
+            @RequestParam(required = false) String type,
             RedirectAttributes redirectAttributes,
             Model model
     ) {
-        return handleCourseAction(studentId, courseId, returnPage, subjectId, subjectName, professorName, departmentName, grade, search, redirectAttributes, model, "cart");
+        return handleCourseAction(studentId, courseId, returnPage, subjectId, subjectName, professorName, departmentName, grade, search, type, redirectAttributes, model, "cart");
     }
 
     // 수강신청
@@ -234,6 +243,7 @@ public class CourseController {
             @RequestParam(required = false) String departmentName,
             @RequestParam(required = false) Integer grade,
             @RequestParam(required = false) String search,
+            @RequestParam(required = false) String type,
             RedirectAttributes redirectAttributes,
             Model model
     ) {
@@ -248,7 +258,7 @@ public class CourseController {
 
         try {
             // 수강신청 로직 처리
-            return handleCourseAction(studentId, courseId, returnPage, subjectId, subjectName, professorName, departmentName, grade, search, redirectAttributes, model, "registration");
+            return handleCourseAction(studentId, courseId, returnPage, subjectId, subjectName, professorName, departmentName, grade, search, type, redirectAttributes, model, "registration");
         } catch (CustomEnrollmentException e) {
             // 트리거 예외 처리
             redirectAttributes.addFlashAttribute("message", e.getMessage());
@@ -278,7 +288,7 @@ public class CourseController {
     // 수강신청 취소
     @PostMapping("/removeCourseWaitlist")
     public String removeCourseWaitlist(@RequestParam("studentId") String studentId,
-                               @RequestParam("courseId") Long courseId) {
+                                       @RequestParam("courseId") Long courseId) {
         // CourseRegistrationId 생성
         courseWaitlistId id = new courseWaitlistId(studentId, courseId);
 

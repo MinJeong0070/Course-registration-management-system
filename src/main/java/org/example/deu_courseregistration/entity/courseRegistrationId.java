@@ -2,6 +2,7 @@ package org.example.deu_courseregistration.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.util.Objects;
 
 @Embeddable
@@ -9,7 +10,7 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class courseRegistrationId implements java.io.Serializable{ // 수강신청 복합 기본키 설정
+public class courseRegistrationId implements java.io.Serializable { // 수강신청 복합 기본키 설정
     @Column(name = "학번", length = 9)
     private String studentId;
 
