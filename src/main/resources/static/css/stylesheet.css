@@ -105,19 +105,18 @@ body {
 #navbarSupportedContent .active > a:not(:only-child):after {
     transform: rotate(90deg);
 }
+
 .hori-selector {
     display: inline-block;
     position: absolute;
     height: 100%;
-    top: 0px;
-    left: 0px;
-    transition-duration: 0.6s;
-    transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
     background-color: #fff;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     margin-top: 10px;
 }
+
+/* 좌우에 장식 요소 설정 */
 .hori-selector .right,
 .hori-selector .left {
     position: absolute;
@@ -126,12 +125,15 @@ body {
     background-color: #fff;
     bottom: 10px;
 }
+
 .hori-selector .right {
     right: -25px;
 }
+
 .hori-selector .left {
     left: -25px;
 }
+
 .hori-selector .right:before,
 .hori-selector .left:before {
     content: "";
@@ -141,10 +143,12 @@ body {
     border-radius: 50%;
     background-color: #1764dc;
 }
+
 .hori-selector .right:before {
     bottom: 0;
     right: -25px;
 }
+
 .hori-selector .left:before {
     bottom: 0;
     left: -25px;

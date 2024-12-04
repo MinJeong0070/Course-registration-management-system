@@ -47,13 +47,13 @@
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/}" data-page="idnex">수강신청</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item active">
                     <a class="nav-link" th:href="@{CourseRegistrationStatus(studentId=20203019)}" data-page="CourseRegistrationStatus">수강신청내역</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{CourseWaitlistStatus(studentId=20203019)}" data-page="CourseWaitlistStatus">수강대기내역</a>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a class="nav-link" th:href="@{CourseCart}" data-page="CourseCart">장바구니</a>
                 </li>
                 <li class="nav-item">
@@ -64,7 +64,6 @@
         </div>
     </nav>
     <div id="content-area" class="p-4">
-
         <table class="w-full border-collapse border">
             <thead>
             <tr>

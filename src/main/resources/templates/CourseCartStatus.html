@@ -51,16 +51,18 @@
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{CourseWaitlistStatus(studentId=20203019)}" data-page="CourseWaitlistStatus">수강대기내역</a>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a class="nav-link" th:href="@{CourseCart}" data-page="CourseCart">장바구니</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item active">
                     <a class="nav-link" th:href="@{CourseCartStatus(studentId=20203019)}" data-page="CourseCartStatus">장바구니 현황</a>
                 </li>
 
             </ul>
         </div>
     </nav>
+
+
     <div id="content-area" class="p-4">
         <input type="hidden" name="returnPage" th:value="'CourseCartStatus'"/>
         <table class="w-full border-collapse border">
